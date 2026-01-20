@@ -127,6 +127,24 @@ export const getCars = async (filters = {}) => {
 };
 
 /**
+ * Advanced search for cars
+ */
+export const searchCars = async (filters = {}) => {
+  try {
+    // Convert features array to comma-separated string
+    const params = { ...filters };
+    if (Array.isArray(params.features) && params.features.length > 0) {
+      params.features = params.features.join(',');
+    }
+    
+    const response = await api.get('/cars/search', { params });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+/**
  * Get single car by ID
  */
 export const getCarById = async (id) => {
@@ -206,4 +224,6 @@ export const healthCheck = async () => {
   }
 };
 
+// Export api instance as both named and default export
+export { api };
 export default api;
