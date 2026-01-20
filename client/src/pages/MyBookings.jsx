@@ -4,11 +4,13 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Car, DollarSign, Filter, Search } from 'lucide-react';
+import { Calendar, MapPin, Car, DollarSign, Filter, Search, CreditCard } from 'lucide-react';
 import { getUserBookings } from '../services/api';
 
 const MyBookings = () => {
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -211,6 +213,26 @@ const MyBookings = () => {
                         </div>
                       </div>
                     </div>
+
+                    {/* Payment Button */}
+                    {booking.paymentStatus === 'Pending' && booking.status !== 'Cancelled' && (
+                      <div className="mt-4 flex items-center justify-end">
+                        <button
+                          onClick={() => navigate('/payment', { state: { booking } })}
+                          className="btn-primary flex items-center space-x-2"
+                        >
+                          <CreditCard className="w-4 h-4" />
+                          <span>Pay Now</span>
+                        </button>
+                      </div>
+                    )}
+                    {booking.paymentStatus === 'Paid' && (
+                      <div className="mt-4 flex items-center justify-end">
+                        <span className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+                          ✓ Payment Completed
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
